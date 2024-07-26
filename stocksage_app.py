@@ -33,12 +33,12 @@ background: linear-gradient(135deg, #f7474755 25%, transparent 25%) -24px 0/ 48p
 </style>
 """ 
 st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="expanded")
-st.markdown(page_bg_img,unsafe_allow_html=True)
+# st.markdown(page_bg_img,unsafe_allow_html=True)
 title=st.markdown('''
          # *StockSage* : **An Intelligent Stock Price Predictor**''')
 st.divider()
-about=st.markdown("### About the Project:")
-para1=st.sidebar.info("""StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
+st.sidebar.markdown("### About the Project:")
+st.sidebar.info("""StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
 
    
    
