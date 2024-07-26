@@ -110,7 +110,7 @@ y_test=y_data[splitting_length:]
 X_train,y_train=np.array(X_train),np.array(y_train)
 X_test,y_test=np.array(X_test),np.array(y_test)
 # Loading the model
-model=load_model("STOCK/stock_model_1.keras")
+model=load_model("stock_model_1.keras")
 predictions=model.predict(X_test)
 actual_predictions=scaler.inverse_transform(predictions)
 inv_y_test=scaler.inverse_transform(y_test)
