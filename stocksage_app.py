@@ -40,7 +40,7 @@ st.sidebar.markdown("## About the Project:")
 st.sidebar.info("""StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
 st.sidebar.info('''Reason for choosing such an architecture :- LSTM networks are particularly well-suited for stock price prediction due to their ability to handle sequential data and capture long-term dependencies.Since stock prices are inherently sequential, with each day's price influenced by previous days. LSTM networks can easily excel in such a task.Moreover,stock prices can be influenced by events and trends that span over long periods. LSTMs, with their memory cells and gating mechanisms, can learn and remember these long-term dependencies better than traditional RNNs.  ''')
 st.sidebar.divider()
-st.sidebar.markdown("This app was created by : **Ayush Saini**")
+st.sidebar.markdown("Made by **Ayush Saini**")
 
 #The main page
 st.markdown("## Currently showing")
