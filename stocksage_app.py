@@ -32,21 +32,16 @@ background: linear-gradient(135deg, #f7474755 25%, transparent 25%) -24px 0/ 48p
 }
 </style>
 """ 
-st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="auto")
+st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="expanded")
 st.markdown(page_bg_img,unsafe_allow_html=True)
 title=st.markdown('''
          # *StockSage* : **An Intelligent Stock Price Predictor**''')
 st.divider()
 about=st.markdown("### About the Project:")
-para1=st.info("""StockSage is an innovative stock price prediction tool designed to help investors make informed decisions. Utilizing advanced machine learning algorithms, StockSage analyzes historical stock data to forecast future price movements with high accuracy.
+para1=st.sidebar.info("""StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.
 
-Features \n
-* Accurate Predictions: Employs state-of-the-art models to provide reliable stock price forecasts.
-* User-Friendly Interface: Easy to navigate, enabling users to quickly access predictions and insights.
-* Comprehensive Insights: Offers detailed analysis and trends to support investment strategies.
-With StockSage, gain a competitive edge in the market by leveraging predictive analytics to guide your investments.
-""")    
-st.divider()        
+   
+   
 
 st.markdown("## Currently showing")
 selected_ticker=st.selectbox("",list(company_map.keys()),placeholder="Select a ticker",)
