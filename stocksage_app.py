@@ -21,6 +21,9 @@ page_bg_img="""
 [data-testid="stHeader"]{
     background-color: rgba(0,0,0,0);
 }
+[data-testid="stSidebar"]{
+background-image: linear-gradient(to right top, #2a1c60, #282565, #262d68, #26356c, #283c6e, #253c73, #203d78, #1b3d7d, #0d3685, #062e8c, #102491, #201494);
+}
 </style>
 """ 
 st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="expanded")
