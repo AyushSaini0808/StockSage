@@ -16,24 +16,15 @@ company_map = {i: company_map[i] for i in myKeys}
 page_bg_img="""
 <style>
 [data-testid="stAppViewContainer"]{
-    background-color: #1e2ba3;
-opacity: 1;
-background-image: radial-gradient(circle at center center, #e90000, #1e2ba3), repeating-radial-gradient(circle at center center, #e90000, #e90000, 24px, transparent 48px, transparent 24px);
-background-blend-mode: multiply;
+    background-image: linear-gradient(to right top, #6c51d7, #6055d5, #5359d3, #475cd0, #3b5fcd, #335ac7, #2b56c2, #2251bc, #1e43b3, #1d35a9, #1e269f, #201494);
 }
 [data-testid="stHeader"]{
     background-color: rgba(0,0,0,0);
 }
-[data-testid="stSidebar"]{
-    background-color: #59230f;
-opacity: 1;
-background: linear-gradient(135deg, #f7474755 25%, transparent 25%) -24px 0/ 48px 48px, linear-gradient(225deg, #f74747 25%, transparent 25%) -24px 0/ 48px 48px, linear-gradient(315deg, #f7474755 25%, transparent 25%) 0px 0/ 48px 48px, linear-gradient(45deg, #f74747 25%, #59230f 25%) 0px 0/ 48px 48px;
-    font-family: cursive;
-}
 </style>
 """ 
 st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="expanded")
-# st.markdown(page_bg_img,unsafe_allow_html=True)
+st.markdown(page_bg_img,unsafe_allow_html=True)
 title=st.markdown('''
          # *StockSage* : **An Intelligent Stock Price Predictor**''')
 st.divider()
