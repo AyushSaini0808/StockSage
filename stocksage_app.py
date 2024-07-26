@@ -1,3 +1,4 @@
+# Importing necessary libraries
 import streamlit as st
 import time
 import plotly.express as px
@@ -8,11 +9,12 @@ from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
 import math
-
+# Creating a hashmap to map company name with corresponding stock ticker
 company_map={"Google":"GOOG","Netflix":"NFLX","Amazon":"AMZN","Apple":"AAPL","Tesla":"TSLA","Mircosoft":"MSFT","Meta":"META"}
 myKeys = list(company_map.keys())
 myKeys.sort()
 company_map = {i: company_map[i] for i in myKeys}
+# Applying some CSS formatting to enhance the web app
 page_bg_img="""
 <style>
 [data-testid="stAppViewContainer"]{
@@ -26,20 +28,24 @@ background-image: linear-gradient(to right top, #2a1c60, #282565, #262d68, #2635
 }
 </style>
 """ 
+#Setting initial configurations of the app
 st.set_page_config(page_title="StockSage",layout="wide",page_icon="📈",initial_sidebar_state="expanded")
 st.markdown(page_bg_img,unsafe_allow_html=True)
+# Building the app
 title=st.markdown('''
          # *StockSage* : **An Intelligent Stock Price Predictor**''')
 st.divider()
+# Creating the sidebar content
 st.sidebar.markdown("## About the Project:")
 st.sidebar.info("""StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
 st.sidebar.info('''Reason for choosing such an architecture :- LSTM networks are particularly well-suited for stock price prediction due to their ability to handle sequential data and capture long-term dependencies.Since stock prices are inherently sequential, with each day's price influenced by previous days. LSTM networks can easily excel in such a task.Moreover,stock prices can be influenced by events and trends that span over long periods. LSTMs, with their memory cells and gating mechanisms, can learn and remember these long-term dependencies better than traditional RNNs.  ''')
-   
-   
+st.sidebar.divider()
+st.sidebar.markdown("This app was created by : ** Ayush Saini **")
 
+#The main page
 st.markdown("## Currently showing")
-selected_ticker=st.selectbox("",list(company_map.keys()),placeholder="Select a ticker",)
 
+selected_ticker=st.selectbox("",list(company_map.keys()),placeholder="Select a ticker",)
 end=datetime.now()
 start=datetime(year=end.year-10,month=end.month,day=end.day)
 data=yf.download(company_map[selected_ticker],start,end)
@@ -62,8 +68,8 @@ def volume_graph(data):
     return fig
 fig=volume_graph(data)
 st.plotly_chart(fig)
-#Moving Averages:
 
+#Moving Averages:
 st.markdown("### **Moving Averages**")
 st.write('''In finance, a moving average (MA) is a stock indicator commonly used in technical analysis. The reason for calculating the moving average of a stock is to help smoothen short-term fluctuations and highlight long-term trends in data.
  A rising moving average indicates that the security is in an uptrend, while a declining moving average indicates a downtrend.''')
@@ -92,6 +98,7 @@ for i in range(100,len(scaled_data)):
     X_data.append(scaled_data[i-100:i])
     y_data.append(scaled_data[i])
 splitting_length=int(len(X_data)*0.7)
+# Splitting the data (70% training and 30% testing)
 X_train=X_data[:splitting_length]
 y_train=y_data[:splitting_length]
 X_test=X_data[splitting_length:]
@@ -103,7 +110,7 @@ model=load_model("stock_model_1.keras")
 predictions=model.predict(X_test)
 actual_predictions=scaler.inverse_transform(predictions)
 inv_y_test=scaler.inverse_transform(y_test)
-
+# Make the predictions
 st.subheader("Original vs Predictions")
 left,middle,right=st.columns([5,1,4])
 plotting_data=pd.DataFrame({"Original Prices":inv_y_test.reshape(-1),"Predictions":actual_predictions.reshape(-1)},index=data.index[splitting_length+100:])
