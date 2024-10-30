@@ -54,7 +54,7 @@ middle.subheader(f"{selected_ticker} stock history")
 middle.dataframe(data,width=1000,height=350)
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
-    fig=px.line(data,x=data.index,y=data["Adj Close"],title=f"          Adj. Close Price for {selected_ticker}")
+    fig=px.line(data,x=data.index,y=data["Adj Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
     fig.update_layout(xaxis_title="Date",yaxis_title="Adj. Close")
     return fig
 fig=adj_close_graph(data)
@@ -62,7 +62,7 @@ st.plotly_chart(fig)
 
 # Graph for plotting "volume" of stock
 def volume_graph(data):
-    fig=px.line(data,x=data.index,y=data["Volume"],title=f"         Stock volume for {selected_ticker}")
+    fig=px.line(data,x=data.index,y=data["Volume"].values.reshape(-1),title=f"         Stock volume for {selected_ticker}")
     fig.update_layout(xaxis_title="Date",yaxis_title="Volume")
     return fig
 fig=volume_graph(data)
@@ -75,7 +75,7 @@ st.write('''In finance, a moving average (MA) is a stock indicator commonly used
 
 def moving_average_plot(data):
     ma = [100, 200, 300]
-    fig = px.line(data, x=data.index, y=data["Adj Close"], title=f'         Adjusted Close Prices and Moving Averages for {selected_ticker}')
+    fig = px.line(data, x=data.index, y=data["Adj Close"].values.reshape(-1), title=f'         Adjusted Close Prices and Moving Averages for {selected_ticker}')
 
     for m in ma:
         rolling_avg = data["Adj Close"].rolling(m).mean()
@@ -136,4 +136,3 @@ prediction_scaled = model.predict(input_data)
 # Inverse transform the prediction to get the actual price
 predicted_price = scaler.inverse_transform(prediction_scaled)[0][0]
 st.markdown(f"          ##### Predicted Adusted Close price for _{selected_ticker}_ on :green[{datetime.now().date()}]: $ :blue-background[{predicted_price}]")
-
