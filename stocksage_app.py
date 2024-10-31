@@ -49,16 +49,16 @@ end=datetime.now()
 start=datetime(year=end.year-10,month=end.month,day=end.day)
 data=yf.download(company_map[selected_ticker],start,end)
 
-left,middle,right=st.columns([2,10,1])
-middle.subheader(f"{selected_ticker} stock history")
-middle.dataframe(data,width=1000,height=350)
+left,right=st.columns([10,10])
+right.subheader(f"{selected_ticker} stock history")
+right.dataframe(data,width=1000,height=350)
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
     fig=px.line(data,x=data.index,y=data["Adj Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
     fig.update_layout(xaxis_title="Date",yaxis_title="Adj. Close")
     return fig
 fig=adj_close_graph(data)
-st.plotly_chart(fig)
+left.plotly_chart(fig)
 
 # Graph for plotting "volume" of stock
 def volume_graph(data):
