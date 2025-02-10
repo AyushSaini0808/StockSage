@@ -54,7 +54,7 @@ right.subheader(f"{selected_ticker} stock history")
 right.dataframe(data,width=1000,height=350)
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
-    fig=px.line(data,x=data.index,y=data["Adj Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
+    fig=px.line(data,x=data.index,y=data["Adj_Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
     fig.update_layout(xaxis_title="Date",yaxis_title="Adj. Close")
     return fig
 fig=adj_close_graph(data)
