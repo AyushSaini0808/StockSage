@@ -111,7 +111,7 @@ actual_predictions=scaler.inverse_transform(predictions)
 inv_y_test=scaler.inverse_transform(y_test)
 # Make the predictions
 st.subheader("Original vs Predictions")
-left,middle,right=st.columns([5,1,4])
+left,right=st.columns([5,4])
 plotting_data=pd.DataFrame({"Original Prices":inv_y_test.reshape(-1),"Predictions":actual_predictions.reshape(-1)},index=data.index[splitting_length+100:])
 left.dataframe(plotting_data,width=800)
 def org_pred_graph(data):
