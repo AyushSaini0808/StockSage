@@ -49,7 +49,7 @@ ticker_symbol = company_map[selected_ticker]
 end = datetime.now()
 start = datetime(end.year - 6, end.month, end.day)
 data = yf.download(ticker_symbol, start, end)
-data.columns = data.columns.droplevel(0) 
+
 # Get company info and financials
 company = yf.Ticker(ticker_symbol)
 info = company.info
