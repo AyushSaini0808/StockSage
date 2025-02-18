@@ -50,7 +50,14 @@ ticker_symbol = company_map[selected_ticker]
 end = datetime.now()
 start = datetime(end.year - 6, end.month, end.day)
 data = yf.download(ticker_symbol, start, end)
-
+column_names = {
+    'Adj Close': ('Adj Close', ticker_symbol),
+    'Close': ('Close', ticker_symbol),
+    'High': ('High', ticker_symbol),
+    'Low': ('Low', ticker_symbol),
+    'Open': ('Open', ticker_symbol),
+    'Volume': ('Volume', ticker_symbol)
+}
 # Get company info and financials
 company = yf.Ticker(ticker_symbol)
 info = company.info
@@ -126,7 +133,7 @@ right.dataframe(data, width=1000, height=350)
 
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
-    fig=px.line(data,x=data.index,y=data["Adj Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
+    fig=px.line(data,x=data.index,y=data[column_names['Adj Close']].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
     fig.update_layout(xaxis_title="Date",yaxis_title="Adj. Close")
     return fig
 fig=adj_close_graph(data)
@@ -150,7 +157,7 @@ st.write('''In finance, a moving average (MA) is a stock indicator commonly used
 
 def moving_average_plot(data):
     ma = [100, 200, 300]
-    fig = px.line(data, x=data.index, y=data["Adj Close"].values.reshape(-1), title=f'         Adjusted Close Prices and Moving Averages for {selected_ticker}')
+    fig = px.line(data, x=data.index, y=data[column_names['Adj Close']].values.reshape(-1), title=f'         Adjusted Close Prices and Moving Averages for {selected_ticker}')
 
     for m in ma:
         rolling_avg = data["Adj Close"].rolling(m).mean()
