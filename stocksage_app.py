@@ -10,7 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
 import math
 # Creating a hashmap to map company name with corresponding stock ticker
-company_map={"Google":"GOOG","NVIDIA":"NVDA","Netflix":"NFLX","Amazon":"AMZN","Apple":"AAPL","Tesla":"TSLA","Mircosoft":"MSFT","Meta":"META"}
+company_map={"Google":"GOOG","NVIDIA":"NVDA","Netflix":"NFLX","Amazon":"AMZN","Apple":"AAPL","Tesla":"TSLA","Microsoft":"MSFT","Meta":"META"}
 myKeys = list(company_map.keys())
 myKeys.sort()
 company_map = {i: company_map[i] for i in myKeys}
@@ -37,14 +37,15 @@ st.markdown(page_bg_img,unsafe_allow_html=True)
 title=st.title('StockSage : Real-Time Insights & Price Predictions')
 st.divider()
 # Creating the sidebar content
+st.sidebar.markdown("## Select the company ticker:")
+selected_ticker = st.sidebar.selectbox("", list(company_map.keys()), placeholder="Select a ticker")
+st.sidebar.divider()
 st.sidebar.markdown(f"## About the Project:")
 st.sidebar.markdown("""### StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
 st.sidebar.divider()
 st.sidebar.markdown("Made by **Ayush Saini**")
 
 # The main page
-st.sidebar.markdown("## Select the company ticker:")
-selected_ticker = st.sidebar.selectbox("", list(company_map.keys()), placeholder="Select a ticker")
 ticker_symbol = company_map[selected_ticker]
 end = datetime.now()
 start = datetime(end.year - 6, end.month, end.day)
@@ -122,9 +123,6 @@ left, right = st.columns([10,10])
 right.subheader(f"{selected_ticker} stock history")
 right.dataframe(data, width=1000, height=350)
 
-data.columns = data.columns.get_level_values(-1)
-data.columns = ["Adj Close", "Close", "High", "Low", "Open", "Volume"]
-print(data.columns)
 
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
@@ -133,14 +131,6 @@ def adj_close_graph(data):
     return fig
 fig=adj_close_graph(data)
 left.plotly_chart(fig)
-
-# Graph for plotting "volume" of stock
-# def volume_graph(data):
-#     fig=px.line(data,x=data.index,y=data["Volume"].values.reshape(-1),title=f"         Stock volume for {selected_ticker}")
-#     fig.update_layout(xaxis_title="Date",yaxis_title="Volume")
-#     return fig
-# fig=volume_graph(data)
-# st.plotly_chart(fig)
 
 data['Daily Return'] = data['Adj Close'].pct_change() * 100
 
