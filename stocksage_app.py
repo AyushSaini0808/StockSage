@@ -122,14 +122,16 @@ left, right = st.columns([10,10])
 right.subheader(f"{selected_ticker} stock history")
 right.dataframe(data, width=1000, height=350)
 
+data.columns = data.columns.get_level_values(-1)
+data.columns = ["Adj Close", "Close", "High", "Low", "Open", "Volume"]
+print(data.columns)
+
 # Graph for plotting "adj close" of stock
 def adj_close_graph(data):
-    fig = px.line(data, x=data.index, y="Adj Close", 
-                  title=f"Adj. Close Price for {selected_ticker}")
-    fig.update_layout(xaxis_title="Date", yaxis_title="Adj. Close")
+    fig=px.line(data,x=data.index,y=data["Adj Close"].values.reshape(-1),title=f"          Adj. Close Price for {selected_ticker}")
+    fig.update_layout(xaxis_title="Date",yaxis_title="Adj. Close")
     return fig
-
-fig = adj_close_graph(data)
+fig=adj_close_graph(data)
 left.plotly_chart(fig)
 
 # Graph for plotting "volume" of stock
