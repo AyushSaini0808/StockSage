@@ -1,7 +1,8 @@
-# StockSage: An Intelligent Stock Price Predictor
+# StockSage: Real-Time Insights & Price Predictions
+
+<img width="1490" alt="Screenshot 2025-02-18 at 6 43 28 PM" src="https://github.com/user-attachments/assets/15177d56-693c-4256-86ef-3d76ff07f6ea" />
 
 ## Overview
-
 **StockSage** is an intelligent stock price predictor designed to provide insightful information on the trends of any given stock ticker. By utilizing a deep learning approach, StockSage predicts the adjusted close price of a stock using the Long Short-Term Memory (LSTM) model from Keras. The application is built using **Streamlit** and is intended to display historical stock data, including the opening, closing, adjusted closing prices, and trading volume. It also offers a graphical representation of stock price trends for better visualization.
 
 This repository contains the complete source code for StockSage, along with instructions on how to run the application and contribute to it.
@@ -57,3 +58,37 @@ Once the dependencies are installed, you can run the Streamlit app with the foll
 
 ```bash
 streamlit run app.py
+```
+This will launch the app in your browser at http://localhost:8501. You can input a company name to view the stock price prediction and associated visualizations.
+
+## Points of Improvement
+1. **Dynamic Stock Search**:
+The app currently uses a predefined list of stock tickers, mapped using a hashmap between the company name and its corresponding stock ticker. A future enhancement would be to allow users to dynamically search for stock tickers by entering the company name. This would make the app more versatile, eliminating the need for a static list.
+
+2. **Feature Expansion**:
+The current model only predicts the adjusted close price of a stock. However, there are many other valuable features in the dataset (e.g., high, low, volume), which could be predicted. Extending the model to predict other features could provide more comprehensive insights into the stock's performance. Additionally, exploring other financial indicators or advanced features, such as volatility or moving averages, could add significant value.
+
+3. **Model Enhancement**:
+The LSTM model could be enhanced by incorporating additional features such as technical indicators, news sentiment analysis, or macro-economic data to improve the accuracy of predictions. Experimenting with more advanced architectures, such as GRU (Gated Recurrent Unit) or transformers, might also yield better results for stock price prediction tasks.
+
+4. **Performance Optimization**:
+Currently, the app may experience latency due to the time it takes to fetch data from Yahoo Finance and run predictions on the LSTM model. Future optimizations could involve caching stock data or model inference optimizations to reduce response times.
+
+## Contribution
+We welcome contributions to enhance StockSage! If you would like to contribute to this project, follow these steps:
+
+Fork the repository.
+Create a new branch for your feature (git checkout -b feature-name).
+Commit your changes (git commit -am 'Add new feature').
+Push to the branch (git push origin feature-name).
+Open a pull request with a detailed description of the feature you have implemented or the issue you have fixed.
+Please ensure your code adheres to the existing coding style and includes tests where applicable.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+yfinance: For fetching historical stock data.
+Keras: For providing a robust framework for building LSTM models.
+Streamlit: For creating a user-friendly web interface to visualize stock data and predictions.
+Matplotlib & Plotly: For creating interactive visualizations of stock trends.
