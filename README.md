@@ -47,3 +47,13 @@ To get started, clone the repository to your local machine:
 ```bash
 git clone https://github.com/your-username/StockSage.git
 cd StockSage
+```
+Install the dependencies using pip
+```bash
+pip install -r requirements.txt
+```
+
+Once the dependencies are installed, you can run the Streamlit app with the following command:
+
+```bash
+streamlit run app.py
