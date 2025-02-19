@@ -8,11 +8,18 @@ import yfinance as yf
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
-import math
 
 # Creating a hashmap to map company name with corresponding stock ticker
-company_map = {"Google": "GOOG", "NVIDIA": "NVDA", "Netflix": "NFLX", "Amazon": "AMZN", "Apple": "AAPL",
-               "Tesla": "TSLA", "Microsoft": "MSFT", "Meta": "META"}
+company_map = {
+    "Google": "GOOG",
+    "NVIDIA": "NVDA",
+    "Netflix": "NFLX",
+    "Amazon": "AMZN",
+    "Apple": "AAPL",
+    "Tesla": "TSLA",
+    "Microsoft": "MSFT",
+    "Meta": "META"
+}
 myKeys = list(company_map.keys())
 myKeys.sort()
 company_map = {i: company_map[i] for i in myKeys}
@@ -21,16 +28,17 @@ company_map = {i: company_map[i] for i in myKeys}
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"]{
-background: rgb(0,0,0);
-background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(71,71,71,1) 35%, rgba(0,0,0,1) 100%);
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(71,71,71,1) 35%, rgba(0,0,0,1) 100%);
 }
 [data-testid="stHeader"]{
     background-color: rgba(0,0,0,0);
 }
 [data-testid="stSidebar"]{
-background: rgb(115,111,111);
-color:rgb(0,0,0);
-background: linear-gradient(90deg, rgba(115,111,111,1) 0%, rgba(133,133,133,1) 40%, rgba(173,172,172,1) 96%);
+    background: rgb(115,111,111);
+    color: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(115,111,111,1) 0%, rgba(133,133,133,1) 40%, rgba(173,172,172,1) 96%);
+}
 </style>
 """
 
@@ -47,30 +55,22 @@ st.sidebar.markdown("## Select the company ticker:")
 selected_ticker = st.sidebar.selectbox("", list(company_map.keys()), placeholder="Select a ticker")
 st.sidebar.divider()
 st.sidebar.markdown(f"## About the Project:")
-st.sidebar.markdown(
-    """### StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory),a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
+st.sidebar.markdown("""### StockSage is designed to provide insightful information regarding the stock trends of some of the major tech. companies. Utilizing LSTM(Long-Short Term Memory), a recurrent neural network, StockSage analyzes historical stock data to forecast future price movements with high accuracy.""")
 st.sidebar.divider()
 st.sidebar.markdown("Made by **Ayush Saini**")
 
-# The main page
+# Fetching and preparing data
 ticker_symbol = company_map[selected_ticker]
 end = datetime.now()
 start = datetime(end.year - 6, end.month, end.day)
-data = yf.download(ticker_symbol, start, end)
-
-# Define column names for easy access
-column_names = {
-    'Adj Close': ('Adj Close', ticker_symbol),
-    'Close': ('Close', ticker_symbol),
-    'High': ('High', ticker_symbol),
-    'Low': ('Low', ticker_symbol),
-    'Open': ('Open', ticker_symbol),
-    'Volume': ('Volume', ticker_symbol)
-}
+data = yf.download(ticker_symbol, start, end,group_by="Ticker")
+data=data.stack(level=0).rename_axis(["Date","Ticker"]).reset_index(level=1)
+data.drop("Ticker",inplace=True,axis=1)
 
 # Get company info and financials
 company = yf.Ticker(ticker_symbol)
 info = company.info
+print(info)
 
 # Create cards for financial metrics
 col1, col2 = st.columns(2)
@@ -91,8 +91,8 @@ with col2:
         </div>
     </div>
     """.format(
-        info.get('totalRevenue', 0) / 1e9 if info.get('totalRevenue') else 0,
-        info.get('netIncomeToCommon', 0) / 1e9 if info.get('netIncomeToCommon') else 0
+        info.get('totalRevenue', 0)/1e9 if info.get('totalRevenue') else 0,
+        info.get('netIncomeToCommon', 0)/1e9 if info.get('netIncomeToCommon') else 0
     ), unsafe_allow_html=True)
 
 with col1:
@@ -128,114 +128,105 @@ with col1:
     </div>
     """.format(
         info.get('currentPrice', 0),
-        info.get('marketCap', 0) / 1e9,
+        info.get('marketCap', 0)/1e9,
         info.get('fiftyTwoWeekHigh', 0),
         info.get('fiftyTwoWeekLow', 0),
         info.get('volume', 0),
         info.get('averageVolume', 0)
     ), unsafe_allow_html=True)
 
-# Rest of your existing code for charts and predictions...
-left, right = st.columns([10, 10])
+# Display stock history data
+left, right = st.columns([10,10])
 right.subheader(f"{selected_ticker} stock history")
-right.dataframe(data, width=1000, height=350)  # Graph for plotting "adj close" of stock
+right.dataframe(data, width=1000, height=350)
 
-def adj_close_graph(data):
-    fig = px.line(data, x=data.index, y=data[column_names['Adj Close']].values.reshape(-1),
-                  title=f"          Adj. Close Price for {selected_ticker}")
+# Graph for plotting "adj close" of stock
+def close_graph(data):
+    fig = px.line(data, x=data.index, y=data['Close'].values.reshape(-1), title=f"          Close Price for {selected_ticker}")
     fig.update_layout(xaxis_title="Date", yaxis_title="Adj. Close")
     return fig
 
-fig = adj_close_graph(data)
+fig = close_graph(data)
 left.plotly_chart(fig)
 
-data['Daily Return'] = data[column_names['Adj Close']].pct_change() * 100
-
-# Plot volatility (daily return)
+# Volatility graph
+data['Daily Return'] = data['Close'].pct_change() * 100
+st.markdown("### **Volatility**")
+st.write('''Volatility in stocks refers to the degree of variation or fluctuation in the price of a stock over time. 
+        It indicates how much and how quickly the price of a stock changes.
+        High volatility means the stock price can change dramatically in a short period, while low volatility suggests more stable and predictable price movements.
+        Investors often monitor volatility as it can affect investment decisions, risk assessment, and strategy planning.''')
 def volatility_graph(data):
-    fig = px.line(data, x=data.index, y=data['Daily Return'],
-                  title=f"          Volatility (Daily Returns) for {selected_ticker}")
+    fig = px.line(data, x=data.index, y=data['Daily Return'], title=f"          Volatility (Daily Returns) for {selected_ticker}")
     fig.update_layout(xaxis_title="Date", yaxis_title="Daily Return (%)", yaxis=dict(tickformat=".2f"))
     return fig
 
 fig = volatility_graph(data)
 st.plotly_chart(fig)
 
-# Moving Averages:
+# Moving Averages
 st.markdown("### **Moving Averages**")
 st.write('''In finance, a moving average (MA) is a stock indicator commonly used in technical analysis. The reason for calculating the moving average of a stock is to help smoothen short-term fluctuations and highlight long-term trends in data.
- A rising moving average indicates that the security is in an uptrend, while a declining moving average indicates a downtrend.''')
+A rising moving average indicates that the security is in an uptrend, while a declining moving average indicates a downtrend.''')
 
 def moving_average_plot(data):
     ma = [100, 200, 300]
-    fig = px.line(data, x=data.index, y=data[column_names['Adj Close']].values.reshape(-1),
-                  title=f'         Adjusted Close Prices and Moving Averages for {selected_ticker}')
+    fig = px.line(data, x=data.index, y=data[['Close']].values.reshape(-1), title=f'         Close Prices and Moving Averages for {selected_ticker}')
 
     for m in ma:
-        rolling_avg = data[column_names['Adj Close']].rolling(m).mean()
+        rolling_avg = data["Close"].rolling(m).mean()
         fig.add_scatter(x=data.index, y=rolling_avg, mode='lines', name=f'Moving average of {m} days')
 
-    fig.update_layout(xaxis_title="Date", yaxis_title="Adj. Close", legend_title="Data Series")
+    fig.update_layout(xaxis_title="Date", yaxis_title="Close", legend_title="Data Series")
     return fig
 
 fig = moving_average_plot(data)
 st.plotly_chart(fig)
 
-# Scaling the data
+# Scaling the data for LSTM prediction
+scaler = MinMaxScaler(feature_range=(0,1))
+scaled_data = scaler.fit_transform(data[["Close"]])
+
 # Preparing the training and testing data
-scaler = MinMaxScaler(feature_range=(0, 1))
-scaled_data = scaler.fit_transform(data[[column_names['Adj Close']]])
-X_data = []
-y_data = []
+X_data, y_data = [], []
 for i in range(100, len(scaled_data)):
-    X_data.append(scaled_data[i - 100:i])
+    X_data.append(scaled_data[i-100:i])
     y_data.append(scaled_data[i])
+
 splitting_length = int(len(X_data) * 0.7)
+X_train, y_train = np.array(X_data[:splitting_length]), np.array(y_data[:splitting_length])
+X_test, y_test = np.array(X_data[splitting_length:]), np.array(y_data[splitting_length:])
 
-# Splitting the data (70% training and 30% testing)
-X_train = X_data[:splitting_length]
-y_train = y_data[:splitting_length]
-X_test = X_data[splitting_length:]
-y_test = y_data[splitting_length:]
-X_train, y_train = np.array(X_train), np.array(y_train)
-X_test, y_test = np.array(X_test), np.array(y_test)
-
-# Loading the model
+# Loading the model (assuming you have a pre-trained model saved)
 model = load_model("stock_model_1.keras")
 predictions = model.predict(X_test)
 actual_predictions = scaler.inverse_transform(predictions)
 inv_y_test = scaler.inverse_transform(y_test)
 
-# Make the predictions
+# Displaying Original vs Predictions
 st.subheader("Original vs Predictions")
-left, right = st.columns([5, 4])
-plotting_data = pd.DataFrame(
-    {"Original Prices": inv_y_test.reshape(-1), "Predictions": actual_predictions.reshape(-1)},
-    index=data.index[splitting_length + 100:])
+left, right = st.columns([5,4])
+plotting_data = pd.DataFrame({"Original Prices": inv_y_test.reshape(-1), "Predictions": actual_predictions.reshape(-1)}, index=data.index[splitting_length+100:])
+
 left.dataframe(plotting_data, width=800)
 
 def org_pred_graph(data):
-    fig = px.line(pd.concat([data[column_names['Adj Close']][:splitting_length + 100], plotting_data]))
+    fig = px.line(pd.concat([data["Close"][:splitting_length+100], plotting_data]))
     fig.update_layout(legend_title="")
     return fig
 
 fig = org_pred_graph(data)
 right.plotly_chart(fig)
+
 st.divider()
 
-# Get the last 100 days of data
-last_100_days = data[column_names['Adj Close']][-100:].values.reshape(-1, 1)
-
-# Scale the data
+# Predicting future price
+last_100_days = data['Close'][-100:].values.reshape(-1, 1)
 last_100_days_scaled = scaler.transform(last_100_days)
-
-# Reshape the data for the model
 input_data = last_100_days_scaled.reshape(1, 100, 1)
 
 # Make the prediction
 prediction_scaled = model.predict(input_data)
-
-# Inverse transform the prediction to get the actual price
 predicted_price = scaler.inverse_transform(prediction_scaled)[0][0]
 
 st.markdown("""
