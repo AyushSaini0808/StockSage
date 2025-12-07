@@ -1,6 +1,5 @@
 # StockSage: Real-Time Insights & Price Predictions
 
-<img width="1490" alt="Screenshot 2025-02-18 at 6 43 28 PM" src="https://github.com/user-attachments/assets/15177d56-693c-4256-86ef-3d76ff07f6ea" />
 <img width="2528" height="1696" alt="Gemini Generated Image" src="https://github.com/user-attachments/assets/7b9fc948-1502-48fb-851d-056406cf9aa7" />
 
 ## Overview
@@ -21,6 +20,7 @@ The LSTM network is chosen for StockSage because of its ability to handle **sequ
 
 In addition to handling short-term fluctuations, LSTMs can also account for **long-term influences** on stock prices, such as macroeconomic trends, market events, and company performance, which are crucial for accurate predictions.
 
+<img width="1490" alt="Screenshot 2025-02-18 at 6 43 28 PM" src="https://github.com/user-attachments/assets/15177d56-693c-4256-86ef-3d76ff07f6ea" />
 ## How It Works
 
 1. **Data Acquisition**: Stock data is fetched using **yfinance**, a Python library that provides stock market data from Yahoo Finance. The data consists of historical stock prices and trading volume.
