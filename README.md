@@ -1,6 +1,7 @@
 # StockSage: Real-Time Insights & Price Predictions
 
 <img width="1490" alt="Screenshot 2025-02-18 at 6 43 28 PM" src="https://github.com/user-attachments/assets/15177d56-693c-4256-86ef-3d76ff07f6ea" />
+<img width="2528" height="1696" alt="Gemini Generated Image" src="https://github.com/user-attachments/assets/7b9fc948-1502-48fb-851d-056406cf9aa7" />
 
 ## Overview
 **StockSage** is an intelligent stock price predictor designed to provide insightful information on the trends of any given stock ticker. By utilizing a deep learning approach, StockSage predicts the adjusted close price of a stock using the Long Short-Term Memory (LSTM) model from Keras. The application is built using **Streamlit** and is intended to display historical stock data, including the opening, closing, adjusted closing prices, and trading volume. It also offers a graphical representation of stock price trends for better visualization.
